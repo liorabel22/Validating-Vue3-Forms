@@ -61,11 +61,7 @@
       </div>
 
       <div>
-        <BaseButton
-          type="submit"
-          class="-fill-gradient"
-          something="else"
-        >
+        <BaseButton type="submit" class="-fill-gradient" something="else">
           Submit
         </BaseButton>
       </div>
@@ -74,58 +70,55 @@
 </template>
 
 <script>
-import { useField, useForm } from 'vee-validate'
+import { useField, useForm } from "vee-validate";
+import { object, string, required, min, number, boolean } from "yup";
 
 export default {
-  data () {
+  data() {
     return {
       categories: [
-        'sustainability',
-        'nature',
-        'animal welfare',
-        'housing',
-        'education',
-        'food',
-        'community'
+        "sustainability",
+        "nature",
+        "animal welfare",
+        "housing",
+        "education",
+        "food",
+        "community"
       ]
-    }
+    };
   },
-  setup () {
-    const required = value => {
-      const requiredMessage = 'This field is required'
-      if (value === undefined || value === null) return requiredMessage
-      if (!String(value).length) return requiredMessage
+  setup() {
+    // const required = value => {
+    //   const requiredMessage = "This field is required";
+    //   if (value === undefined || value === null) return requiredMessage;
+    //   if (!String(value).length) return requiredMessage;
 
-      return true
-    }
+    //   return true;
+    // };
 
-    const minLength = (number, value) => {
-      if (String(value).length < number) return 'Please type at least ' + number + ' characters'
+    // const minLength = (number, value) => {
+    //   if (String(value).length < number)
+    //     return "Please type at least " + number + " characters";
 
-      return true
-    }
+    //   return true;
+    // };
 
-    const anything = () => {
-      return true
-    }
+    // const anything = () => {
+    //   return true;
+    // };
 
-    const validationSchema = {
-      category: required,
-      title: value => {
-        const req = required(value)
-        if (req !== true) return req
-
-        const min = minLength(3, value)
-        if (min !== true) return min
-
-        return true
-      },
-      description: required,
-      location: undefined,
-      pets: anything,
-      catering: anything,
-      music: anything
-    }
+    const validationSchema = object({
+      category: string().required(),
+      title: yup
+        .string()
+        .required("A cool title is required")
+        .min(3),
+      description: string().required(),
+      location: string(),
+      pets: number(),
+      catering: boolean(),
+      music: boolean()
+    });
 
     const { handleSubmit, errors } = useForm({
       validationSchema,
@@ -134,19 +127,19 @@ export default {
         catering: false,
         music: false
       }
-    })
+    });
 
-    const { value: category } = useField('category')
-    const { value: title } = useField('title')
-    const { value: description } = useField('description')
-    const { value: location } = useField('location')
-    const { value: pets } = useField('pets')
-    const { value: catering } = useField('catering')
-    const { value: music } = useField('music')
+    const { value: category } = useField("category");
+    const { value: title } = useField("title");
+    const { value: description } = useField("description");
+    const { value: location } = useField("location");
+    const { value: pets } = useField("pets");
+    const { value: catering } = useField("catering");
+    const { value: music } = useField("music");
 
     const submit = handleSubmit(values => {
-      console.log('submit', values)
-    })
+      console.log("submit", values);
+    });
 
     return {
       category,
@@ -158,7 +151,7 @@ export default {
       music,
       submit,
       errors
-    }
+    };
   }
-}
+};
 </script>
